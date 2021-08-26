@@ -1,6 +1,6 @@
 require('dotenv').config({path:'./.env'})
-const fs = require('fs')
-const axios = require('axios')
+//const fs = require('fs')
+//const axios = require('axios')
 const line = require('@line/bot-sdk');
 const pool = require("../../utils/database");
 const linemsg = require('./linemsg')
@@ -171,7 +171,7 @@ const find = async(event, keysearch, filters) => {
       "margin": "lg",
       "action": {
         "type": "uri",
-        "uri": "https://liff.line.me/1655904590-e8Z19xEZ?id="+row.id+"&userId="+event.source.userId
+        "uri": "https://liff.line.me/"+process.env.RB_LIFF_READPDF+"?id="+row.id+"&userId="+event.source.userId
         //"uri": "https://liff.line.me/1655904590-kagJeo2g?id="+row.id+"&userId="+event.source.userId
         //"uri": "https://d440d25e8ad4.ngrok.io/rb3_getpdf?id="+row.id+"&userId="+event.source.userId
       },
@@ -211,7 +211,7 @@ const handleEvent = async (event) => {
   let sql = ` SELECT * FROM rb_users WHERE userId = ? `
   const key = [event.source.userId]
   const result = await query(sql,key)
-  
+
   if (result.length > 0) {
     console.log('message: ', event.message.text)
     find (event, event.message.text, '')

@@ -12,7 +12,7 @@ app.set('view engine','ejs')
 app.use('/liff/rb',serveStatic(__dirname + '/handler/rb/liff/admin/dist/spa'))
 
 app.get('/', (req, res) => {
-  res.send("ผู้รับผิดชอบข้อมูล: นายจงดี ตันจะโร (jongdee.t@egat.co.th)");
+  res.send(process.env.CONTACT);
 })
 
 // Line BOT: คุณระเบียบ
@@ -27,19 +27,19 @@ app.use(bodyParser.json())//<-- after line.middleware
 // ***************************************************
 
 //--RB --------------------------------------------
-/*
-app.get('/rb3_readpdf' , (req,res) => {
+
+app.get('/rb_readpdf' , (req,res) => {
   const data = {
-    webhook : process.env.WEBHOOK,
-    liffId : process.env.LIFF_RB_READPDF,
+    webhook : process.env.RB_HOST,
+    liffId : process.env.RB_LIFF_READPDF,
     id: req.query.id
   }
-  res.render('rb3/read', { data })
+  res.render('rb/read', { data })
 })
 
-const rb3_getpdf  = require('./handler/rb3/getpdf');
-app.get('/rb3_getpdf', rb3_getpdf);
-*/
+const rb_getpdf  = require('./handler/rb/getpdf');
+app.get('/rb_getpdf', rb_getpdf);
+
 const rb_action  = require('./handler/rb/action');
 app.post('/rb_action', rb_action);
 

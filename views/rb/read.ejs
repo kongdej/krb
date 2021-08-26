@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A layout example that shows off a responsive product landing page.">
+    <title>ฝ่ายกำกับการปฏิบัติตามกฎระเบียบ</title>
+    <link rel="stylesheet" href="/css/pure/pure-min.css">
+    <link rel="stylesheet" href="/css/pure/styles.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.0.943/pdf.min.js"></script>
+    <style>
+      #pdf-viewer {
+         width: 100vw;
+         height: 100vh;
+         background: rgba(0, 0, 0, 0.1);
+         overflow: auto;
+       }
+
+       .pdf-page-canvas {
+         display: block;
+         margin: 5px auto;
+         border: 1px solid rgba(0, 0, 0, 0.2);
+       }
+    </style>
+  </head>
+
+  <body>
+    <div class="header">
+        <div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+
+            <div style="display: flex; justify-content: space-between; padding:2px; color:#fff;">
+              <div style="display: flex; justify-content: left; ">
+                <img id="imgprofile" style="margin-right: 5px;width:35px; border-radius: 50%;">
+                <div id="profile" style="padding-top:7px;">..</div>
+              </div>
+              <div style="padding-top:7px;">ห้ามนำข้อมูลเผยแพร่สู่ภายนอก กฟผ.</div>
+            </div>
+
+        </div>
+    </div>
+
+    <div style="margin-top:50px;margin-left:0px;text-align: center;">
+      <div id='pdf-viewer' style="font-size:18px; color:#6B92AB"></div>
+    </div>
+
+    <div class="footer is-center">
+      <div class="home-menu pure-menu pure-menu-horizontal">
+        <a id="download" class="pure-menu-heading" download="FileName" style="font-size:8px;">
+          <svg style="width:14px;" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
+          </svg>
+          <span style="font-size:14px;">Download</span>
+        </a>
+      </div>
+    </div>
+
+
+    <script src="https://static.line-scdn.net/liff/edge/2/liff.js"></script>
+    <script>
+
+
+      //url = 'https://d440d25e8ad4.ngrok.io/files/44.pdf';
+      var thePdf = null;
+      var scale = 3;
+
+      function renderPage(pageNumber, canvas) {
+          thePdf.getPage(pageNumber).then(function(page) {
+            viewport = page.getViewport(scale);
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            canvas.style.width = "100%"
+            page.render({canvasContext: canvas.getContext('2d'), viewport: viewport});
+          });
+      }
+
+      /* Helper function */
+      function download_file(fileURL, fileName) {
+          // for non-IE
+          if (!window.ActiveXObject) {
+              var save = document.createElement('a');
+              save.href = fileURL;
+              save.target = '_blank';
+              var filename = fileURL.substring(fileURL.lastIndexOf('/')+1);
+              save.download = fileName || filename;
+      	       if ( navigator.userAgent.toLowerCase().match(/(ipad|iphone|safari)/) && navigator.userAgent.search("Chrome") < 0) {
+      				document.location = save.href;
+      // window event not working here
+      			}else{
+      		        var evt = new MouseEvent('click', {
+      		            'view': window,
+      		            'bubbles': true,
+      		            'cancelable': false
+      		        });
+      		        save.dispatchEvent(evt);
+      		        (window.URL || window.webkitURL).revokeObjectURL(save.href);
+      			}
+          }
+
+          // for IE < 11
+          else if ( !! window.ActiveXObject && document.execCommand)     {
+              var _window = window.open(fileURL, '_blank');
+              _window.document.close();
+              _window.document.execCommand('SaveAs', true, fileName || fileURL)
+              _window.close();
+          }
+      }
+
+
+
+      const webhookUrl = "<%=data.webhook%>"  //<-- webhook
+      const docid = "<%=data.id%>"
+      window.onload = function(e) {
+        const myLiffId = "<%=data.liffId%>";  //<-- Liff Id
+        initializeLiff(myLiffId);
+      };
+
+      function initializeLiff(liffId) {
+        console.log('liffId = ', liffId)
+        liff
+          .init({ liffId })
+          .then(async () => {
+            if (liff.isLoggedIn()) {
+              liff.getProfile().then(async(profile) => {
+                let url= webhookUrl + "/rb_getpdf?id="+docid+"&userId="+profile.userId
+                console.log(url)
+                document.getElementById("profile").innerHTML = profile.displayName
+                document.getElementById("imgprofile").src = profile.pictureUrl
+                document.getElementById('download')
+                  .addEventListener('click', (e) => {
+                    //document.getElementById("download").setAttribute('href', url);
+                    let filename = Math.floor(Date.now() / 1000)
+                    //document.getElementById("download").setAttribute('download', filename.toString()+'.pdf' );
+                    download_file(url,filename.toString()+'.pdf')
+                });
+
+                var loadingTask = pdfjsLib.getDocument(url)
+                //get progress data
+                loadingTask.onProgress = function(data){
+                   console.log( "progress : " + data.loaded/data.total*100 )
+                   let progress = (data.loaded/data.total*100).toFixed(2)
+                   if (progress == 100) {
+                      document.getElementById("pdf-viewer").innerHTML = ''
+                   }
+                   else {
+                     document.getElementById("pdf-viewer").innerHTML = '  <br><br>Downloading <br><br> ' + progress.toString() + '%'
+                   }
+                }
+
+                loadingTask.promise.then(function(pdf) {
+                    thePdf = pdf;
+                    viewer = document.getElementById('pdf-viewer');
+
+                    for(page = 1; page <= pdf.numPages; page++) {
+                      canvas = document.createElement("canvas");
+                      canvas.className = 'pdf-page-canvas';
+                      viewer.appendChild(canvas);
+                      renderPage(page, canvas);
+                    }
+                });
+
+
+
+              })
+          }
+            else {
+              liff.login()
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+
+    </script>
+  </body>
+</html>

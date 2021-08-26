@@ -1,10 +1,11 @@
+require('dotenv').config({path:'./.env'})
 const pool = require("../../utils/database");
-const dateFormat = require('dateformat');
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
+//const dateFormat = require('dateformat');
+//const express = require("express");
+//const bodyParser = require("body-parser");
+//const cors = require("cors");
 const fs = require('fs')
-const settings = require('./settings')
+//const settings = require('./settings')
 
 // function query table with sql and key
 const query = async(sql,key) => {
@@ -46,11 +47,11 @@ const handleAction = async (req, res) => {
   sql = ` SELECT path,filename FROM rb WHERE id = ? `
   key = [id]
   result = await query(sql,key)
-  console.log(result)
+  console.log(sql,id,result)
   if (result.length > 0) {
       insertView(userId, id)
       const {path, filename} = result[0]
-      let filePath =  settings.homePath + path + "/"+ filename;
+      let filePath =  process.env.RB_HOST + path + "/"+ filename;
       console.log(filePath)
       if (fs.existsSync(filePath)) {
         fs.readFile(filePath , function (err,data){
