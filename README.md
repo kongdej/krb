@@ -1,13 +1,15 @@
 # krb
-คุณระเบียบ
---------
-@25-Aug-2021
-@kongdejs
+คุณระเบียบ;
+--------;
+@25-Aug-2021;
+@kongdejs;
 
-- Installation
-  $ git clone https://github.com/kongdej/krb.git
-  $ cd krb
-  $ npm install
+- Installation;
+'''
+  $ git clone https://github.com/kongdej/krb.git;
+  $ cd krb;
+  $ npm install;
+'''
 
 - Create database & Import table
   krb.sql
