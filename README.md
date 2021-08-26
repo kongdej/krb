@@ -54,8 +54,15 @@
 
 ```
 
+- Connect to WebDav Server\
+For Mac: In 'Finder', locate the menu bar at the top and then navigate to Go > Connect to Server.
+enter the URL to your WebDAV directory in the 'Server Address' field.\
+
+For Ubantu: \
+xxx
+
   - for dev
 ```
-    ngrok http 4000
-    npm start
+  $ ngrok http 4000
+  $ npm start
 ```

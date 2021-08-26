@@ -4,12 +4,31 @@ const path = require('path')
 const serveStatic = require('serve-static')
 const line = require('@line/bot-sdk')
 const bodyParser = require("body-parser");
+const cors = require('cors')
+const app = express()
 
-app = express()
+
+var allowedOrigins = ['http://localhost:8080',
+                      'https://lineapi.egat.co.th',
+                      'https://a6d1-124-122-94-197.ngrok.io'
+                    ]
+app.use(cors({
+  origin: function(origin, callback){
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){
+      var msg = 'The CORS policy for this site does not ' +
+                'allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  }
+}));
+
 app.set('view engine','ejs')
 
-// Line liff vue+quasar
-app.use('/liff/rb',serveStatic(__dirname + '/handler/rb/liff/admin/dist/spa'))
+// Static Server
+app.use('/',serveStatic(__dirname + '/public'))
+app.use('/liff_rb_admin',serveStatic(__dirname + '/handler/rb/liff/admin/dist/spa'))
 
 app.get('/', (req, res) => {
   res.send(process.env.CONTACT);
@@ -27,7 +46,13 @@ app.use(bodyParser.json())//<-- after line.middleware
 // ***************************************************
 
 //--RB --------------------------------------------
+const rb_getpdf  = require('./handler/rb/getpdf');
+app.get('/rb_getpdf', rb_getpdf);
 
+const rb_action  = require('./handler/rb/action');
+app.post('/rb_action', rb_action);
+
+// EJS template
 app.get('/rb_readpdf' , (req,res) => {
   const data = {
     webhook : process.env.RB_HOST,
@@ -37,12 +62,6 @@ app.get('/rb_readpdf' , (req,res) => {
   res.render('rb/read', { data })
 })
 
-const rb_getpdf  = require('./handler/rb/getpdf');
-app.get('/rb_getpdf', rb_getpdf);
-
-const rb_action  = require('./handler/rb/action');
-app.post('/rb_action', rb_action);
-
 app.get('/rb_register' , (req,res) => {
   console.log('rb-regiser')
   const data = {
@@ -51,7 +70,7 @@ app.get('/rb_register' , (req,res) => {
   }
   res.render('rb/register', { data })
 })
-
+//-------------------------------------------------
 
 //=== app started ===============
 // production server or local

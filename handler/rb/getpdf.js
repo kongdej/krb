@@ -51,8 +51,8 @@ const handleAction = async (req, res) => {
   if (result.length > 0) {
       insertView(userId, id)
       const {path, filename} = result[0]
-      let filePath =  process.env.RB_HOST + path + "/"+ filename;
-      console.log(filePath)
+      let filePath =  process.env.RB_DOCPATH + path + "/"+ filename;
+      console.log('filePath:',filePath)
       if (fs.existsSync(filePath)) {
         fs.readFile(filePath , function (err,data){
           res.contentType("application/pdf");
