@@ -2,7 +2,7 @@
 คุณระเบียบ\
 --------\
 @25-Aug-2021\
-@kongdejs\
+@kongdejs
 
 - Installation
 ```
@@ -12,18 +12,22 @@
 ```
 
 - Create database & Import table
+```
   krb.sql
-
+```
 - create line BOT
+```
   https://developers.line.biz/en/
-
+```
 - create line LIFF
+```
   RB_LIFF_REGISTER: end point = <RB_HOST>/rb_register
   RB_LIFF_READPDF: end point = <RB_HOST>/rb_readpdf
   RB_LIFF_ADMIN: end point = <RB_HOST>/rb_admin
-
+```
 
 - Modify .env file
+```
   ##-- Line Token --##
   # LINEBOT: RB
   RB_TOKEN = ""
@@ -48,7 +52,10 @@
   ##-- prod:dev --##
   NODE_ENV = dev
 
+```
 
   - for dev
+```
     ngrok http 4000
     npm start
+```
