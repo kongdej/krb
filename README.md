@@ -44,6 +44,10 @@
   DBPASSWD =
   DBNAME =
 
+  ##-- WebDav --##
+  HOMEDIR =
+  WEBDAVDIR =
+
   ##- Contact --##
   CONTACT=''
   ##- DEV PORT --##
@@ -55,13 +59,33 @@
 ```
 
 - Connect to WebDav Server\
+For Mac:
+```
 For Mac: In 'Finder', locate the menu bar at the top and then navigate to Go > Connect to Server.
 enter the URL to your WebDAV directory in the 'Server Address' field.\
+```
 
-For Ubantu: \
-xxx
+For Ubantu:
+```
+Install davfs2 package to mount WebDAV resource as regular file system.
 
-  - for dev
+$ sudo apt-get install davfs2
+
+Mount WebDAV share using command-line
+Create the mountpoint directory.
+
+$ sudo mkdir /mnt/dav
+
+$ sudo mount -t davfs -o noexec https://nextcloud.example.com/remote.php/webdav/ /mnt/dav/
+
+
+Use umount command to unmount the WebDAV share.
+$ sudo umount /mnt/dav
+```
+
+- for dev
+Install ngrok: https://ngrok.com/
+
 ```
   $ ngrok http 4000
   $ npm start
