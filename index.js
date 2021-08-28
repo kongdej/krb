@@ -78,9 +78,9 @@ if (process.env.NODE_ENV == "prod") {
   const fs = require('fs')
   const https = require('https');
   const https_options = {
-    key: fs.readFileSync(path.join(__dirname,'egat_wildcard2018_PKCS8.key')),
-    cert: fs.readFileSync(path.join(__dirname,'egat_wildcard2018.crt')),
-    ca: fs.readFileSync(path.join(__dirname,'root-intermediate.crt'))
+    key: fs.readFileSync(path.join(__dirname,process.env.SSL_KEY)),
+    cert: fs.readFileSync(path.join(__dirname,process.env.SSL_CRT)),
+    ca: fs.readFileSync(path.join(__dirname,process.env.SSL_ROOT))
   };
   const server = https.createServer( https_options , app );
 

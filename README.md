@@ -47,6 +47,11 @@ by kongdejs@gmail.com
   HOMEDIR =
   WEBDAVDIR =
 
+  ##-- SSL --##
+  SSL_KEY  = ''
+  SSL_CRT  = ''
+  SSL_ROOT = ''
+
   ##- Contact --##
   CONTACT=''
   ##- DEV PORT --##
