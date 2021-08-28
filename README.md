@@ -1,10 +1,9 @@
-# krb
-คุณระเบียบ\
+#คุณระเบียบ\
 --------\
 @25-Aug-2021\
 by kongdejs@gmail.com
 
-- Installation
+##Installation
 ```
   $ git clone https://github.com/kongdej/krb.git;
   $ cd krb;
