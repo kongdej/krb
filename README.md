@@ -2,7 +2,7 @@
 คุณระเบียบ\
 --------\
 @25-Aug-2021\
-@kongdejs
+by kongdejs@gmail.com
 
 - Installation
 ```
@@ -58,7 +58,7 @@
 
 ```
 
-- Connect to WebDav Server\
+- WebDav Server
 For Mac:
 ```
 For Mac: In 'Finder', locate the menu bar at the top and then navigate to Go > Connect to Server.
@@ -83,7 +83,7 @@ Use umount command to unmount the WebDAV share.
 $ sudo umount /mnt/dav
 ```
 
-- for dev
+- Local Development
 Install ngrok: https://ngrok.com/
 
 ```
