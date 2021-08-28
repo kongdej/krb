@@ -1,22 +1,25 @@
 <template>
   <page>
-    <!--
+    <q-header elevated>
+      <q-toolbar class="glossy">
+
+        <q-avatar size="lg">
+          <img :src="$pictureUrl">
+        </q-avatar>
+
+        <q-toolbar-title>RB Manager</q-toolbar-title>
+
+
+      </q-toolbar>
+    </q-header>
+<!--
     <page-header>
       <template #title>Home</template>
     </page-header>
-    -->
+-->
     <page-body>
       <div class="q-mt-none q-pa-lg bg-grey-1">
-        <q-input rounded outlined  bottom-slots v-model="text" placeholder="Search.." counter maxlength="200" dense @keyup.enter="searchDocument">
-            <template v-slot:before>
-              <q-avatar size="lg">
-                <img :src="$pictureUrl">
-              </q-avatar>
-            </template>
-            <template v-slot:hint>
-              Search documents
-            </template>
-
+        <q-input rounded outlined  bottom-slots v-model="text" placeholder="Search.."   @keyup.enter="searchDocument">
             <template v-slot:after>
               <q-btn round dense flat icon="send" @click="searchDocument"/>
             </template>
@@ -52,7 +55,7 @@ export default {
 
     const searchDocument = () => {
       //console.log('search = ', text.value)
-      api.post('/rb_action',{
+      api.post('/rb3_action',{
           action: 'search',
           keysearch: text.value
         })

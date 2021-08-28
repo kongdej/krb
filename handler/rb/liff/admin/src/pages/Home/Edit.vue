@@ -72,7 +72,7 @@ export default {
 
     onActivated(() => {
       console.log('get info.')
-      api.post('/rb_action',{
+      api.post('/rb3_action',{
           action: 'search_detail',
           id: route.params.id
         })
@@ -88,7 +88,7 @@ export default {
 
     const onSubmit = () => {
       console.log('submit')
-      api.post('/rb_action',{
+      api.post('/rb3_action',{
           action: 'update_keyword',
           id: route.params.id,
           keyword: keyword.value

@@ -47,8 +47,6 @@ const updateDoc = async(data) => {
 
 /// Main //////////=========================================
 const handleAction = async (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-
   const body = req.body;
   console.log(body)
 
