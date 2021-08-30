@@ -29,5 +29,5 @@ export default boot(async ({ app }) => {
     .catch(err => {
       console.log(err)
     })
-  */
+*/
 })

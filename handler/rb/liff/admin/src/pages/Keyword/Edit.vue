@@ -1,10 +1,56 @@
 <template>
+  <q-layout view="lHh lpr lFf" container style="height: 100vh" class="shadow-2">
+    <q-header>
+      <q-toolbar>
+        <q-btn flat round dense icon="las la-angle-left" to="/keyword"/>
+        <q-toolbar-title>Edit Keyword</q-toolbar-title>
+      </q-toolbar>
+    </q-header>
+
+    <page-footer></page-footer>
+
+    <q-page-container>
+      <div class="q-pa-xs">
+
+        <q-card flat bordered square>
+          <q-card-section class="bg-primary">
+            <div class="text-subtitle2 text-white">{{ title }}</div>
+          </q-card-section>
+          <q-separator />
+
+          <q-card-actions vertical>
+            <q-form @submit="onSubmit" class="q-gutter-md">
+
+              <q-input
+                class="q-mt-lg"
+                type="textarea"
+                v-model="keyword"
+                color="primary"
+                label="Keyword"
+                filled
+                clearable
+              />
+
+              <div>
+                <q-btn label="Submit" type="submit" color="primary"/>
+              </div>
+            </q-form>
+
+          </q-card-actions>
+        </q-card>
+
+      </div>
+
+    </q-page-container>
+  </q-layout>
+  <!--
+
   <page>
     <page-header>
       <template #buttons-left>
         <page-header-btn-back
-          to="/home"
-          label="Home"
+          to="/keyword"
+          label="Keyword"
         />
       </template>
       <template #title>Edit</template>
@@ -45,6 +91,7 @@
 
     </page-body>
   </page>
+-->
 </template>
 
 <script>
@@ -56,6 +103,7 @@ import { useQuasar } from 'quasar'
 export default {
   name: 'EditPage',
   setup() {
+    const store = inject('store')
     const $q = useQuasar()
     const router = useRouter()
     const route = useRoute()
@@ -100,7 +148,7 @@ export default {
             message: 'Update keyword done.',
             color: 'purple'
           })
-          router.push('/home')
+          router.push('/keyword')
         })
         .catch(function (error) {
           console.log(error);
@@ -108,6 +156,7 @@ export default {
     }
 
     return {
+      store,
       result,
       keyword,
       title,

@@ -1,79 +1,97 @@
 <template>
-  <page>
-    <q-header elevated>
-      <q-toolbar class="glossy">
-
-        <q-avatar size="lg">
-          <img :src="$pictureUrl">
-        </q-avatar>
-
-        <q-toolbar-title>RB Manager</q-toolbar-title>
-
-
-      </q-toolbar>
-    </q-header>
-<!--
+  <q-layout view="lHh lpr lFf" style="height: 100vh">
     <page-header>
-      <template #title>Home</template>
+      <template #title>
+        RB Manager - Home
+      </template>
     </page-header>
--->
-    <page-body>
-      <div class="q-mt-none q-pa-lg bg-grey-1">
-        <q-input rounded outlined  bottom-slots v-model="text" placeholder="Search.."   @keyup.enter="searchDocument">
-            <template v-slot:after>
-              <q-btn round dense flat icon="send" @click="searchDocument"/>
-            </template>
-        </q-input>
-      </div>
-      <q-banner inline-actions class="text-white bg-blue-grey-6"  v-if="searchResults.length > 0">
-        Found {{ searchResults.length }} document(s)
-      </q-banner>
-      <q-list bordered separator>
-        <q-item clickable v-ripple v-for="i,index in searchResults" :key="index" :to= "`/home/edit/${i.id}`">
-          <q-item-section>{{ i.filename }}</q-item-section>
-          <q-item-section avatar>
-            <q-icon color="primary" name="chevron_right" />
-          </q-item-section>
-        </q-item>
-      </q-list>
 
+    <page-footer></page-footer>
 
-    </page-body>
-  </page>
+    <q-page-container>
+      <div class="q-pa-md q-mt-lg">
+            <q-list bordered separator>
+              <q-item-label  overline header>
+                <q-icon name="lab la-dashcube" /> Insight analytics
+              </q-item-label>
+              <q-item clickable v-ripple >
+                <q-item-section avatar>
+                  <q-icon name="las la-user-circle" />
+                </q-item-section>
+                <q-item-section>Users</q-item-section>
+                <q-item-section side><q-badge class="q-pa-sm" rounded color="accent" :label="`${users.lastest}/${users.total}`" /></q-item-section>
+              </q-item>
+              <q-item clickable v-ripple >
+                <q-item-section avatar>
+                  <q-icon name="las la-search" />
+                </q-item-section>
+                <q-item-section>Search</q-item-section>
+                <q-item-section side><q-badge class="q-pa-sm" rounded color="secondary" :label="`${search.lastest}/${search.total}`"  /></q-item-section>
+              </q-item>
+              <q-item clickable v-ripple >
+                <q-item-section avatar>
+                  <q-icon name="lab la-readme" />
+                </q-item-section>
+                <q-item-section>Read</q-item-section>
+                <q-item-section side><q-badge class="q-pa-sm" rounded color="negative" :label="`${read.lastest}/${read.total}`"  /> </q-item-section>
+              </q-item>
+              <q-item clickable v-ripple >
+                <q-item-section avatar>
+                  <q-icon name="las la-coins" />
+                </q-item-section>
+                <q-item-section>Documents</q-item-section>
+                <q-item-section side>{{ documents.total }}</q-item-section>
+              </q-item>
+              <q-item clickable v-ripple >
+                <q-item-section avatar>
+                  <q-icon name="las la-clock" />
+                </q-item-section>
+                <q-item-section>Last Updated</q-item-section>
+                <q-item-section side>{{ documents.lastest }}</q-item-section>
+              </q-item>
+            </q-list>
+            <div class="text-caption q-mt-sm text-grey-5">
+              <i class="lar la-bell"></i> Note: (last month/total)
+            </div>
+          </div>
+    </q-page-container>
+  </q-layout>
 </template>
 
 <script>
-import { ref,inject } from 'vue'
+import { ref , inject, onMounted } from 'vue'
 import { api } from 'boot/axios'
 
 export default {
   name: 'Home',
   setup() {
     const store = inject('store')
-    let text = ref('')
-    let searchResults = ref([])
+    let users = ref({})
+    let search = ref({})
+    let read = ref({})
+    let documents = ref({})
 
-    const searchDocument = () => {
-      //console.log('search = ', text.value)
-      api.post('/rb3_action',{
-          action: 'search',
-          keysearch: text.value
+    onMounted(() => {
+      api.post('/rb_action',{
+          action: 'summery'
         })
         .then(function (response) {
-          searchResults.value = response.data.results
-          console.log(response.data);
-          text.value = ''
+          users.value = response.data.results.users
+          search.value = response.data.results.search
+          read.value = response.data.results.read
+          documents.value = response.data.results.documents
         })
         .catch(function (error) {
           console.log(error);
         });
-    }
+    })
 
     return {
       store,
-      text,
-      searchDocument,
-      searchResults
+      users,
+      search,
+      read,
+      documents
     }
   }
 }

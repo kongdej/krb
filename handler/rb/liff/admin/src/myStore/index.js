@@ -10,9 +10,19 @@ const state = reactive({
       label: 'Home'
     },
     {
-      to: '/questions',
-      icon: 'las la-question',
-      label: 'Question'
+      to: '/keyword',
+      icon: 'las la-search',
+      label: 'Keyword'
+    },
+    {
+      to: '/trend',
+      icon: 'las la-sort-amount-up',
+      label: 'Trend'
+    },
+    {
+      to: '/logging',
+      icon: 'las la-info-circle',
+      label: 'Logging'
     }
 
   ]
