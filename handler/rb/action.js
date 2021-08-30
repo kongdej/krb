@@ -4,7 +4,7 @@ const pool = require("../../utils/database");
 //const bodyParser = require("body-parser");
 //const cors = require("cors");
 //const jwt = require("jsonwebtoken");
-//const EWS = require("node-ews");
+const EWS = require("node-ews");
 
 // function query table with sql and key
 const query = async(sql,key) => {

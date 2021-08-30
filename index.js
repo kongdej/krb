@@ -41,6 +41,7 @@ app.post('/rb', line.middleware({
   channelSecret: process.env.RB_SECRERT
 }), rb_handler);
 
+
 // ***************************************************
 app.use(bodyParser.json())//<-- after line.middleware
 // ***************************************************
@@ -68,7 +69,7 @@ app.get('/rb_register' , (req,res) => {
     webhook : process.env.RB_HOST,
     liffId : process.env.RB_LIFF_REGISTER,
   }
-  res.render('rb/register', { data })
+  res.render('rb/register', { data })  // /views/rb/register.ejs
 })
 //-------------------------------------------------
 

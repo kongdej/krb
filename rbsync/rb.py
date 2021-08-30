@@ -73,7 +73,7 @@ if addDocuments or All:
             directories.remove("docs")
         for file in files: # loop files in directory
             if file.find('DS_Store') == -1 :  # skip mac dump file
-                
+
                 n += 1
                 name =  root+'/'+file
                 cat = root.split('/')[len(root.split('/'))-1]
@@ -99,6 +99,7 @@ if addDocuments or All:
                     os.remove(homedir + '/output.txt')
 
                     cleaned_text = re.sub('[^A-Za-z0-9ก-๙\W]+', '', text)
+                    
                     print (cleaned_text)
                     path = root.replace(documents,'')
                     print ('==========================================')
