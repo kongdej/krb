@@ -89,7 +89,8 @@ const logging = async() => {
 /// Main //////////=========================================
 const handleAction = async (req, res) => {
   const body = req.body;
-  console.log(body)
+  console.log('req', req.user)
+  //console.log('headers = ',req.headers['x-access-token'])
 
   if (body.action  == 'register') {
       //console.log(req.body);

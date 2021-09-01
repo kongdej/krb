@@ -11,6 +11,8 @@ const api = axios.create({ baseURL: 'http://localhost:4000' })
 //const api = axios.create({ baseURL: 'https://a6d1-124-122-94-197.ngrok.io' })
 //const api = axios.create({ baseURL: 'https://lineapi.egat.co.th' })
 
+
+
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
 

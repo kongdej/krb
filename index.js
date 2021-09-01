@@ -5,13 +5,16 @@ const serveStatic = require('serve-static')
 const line = require('@line/bot-sdk')
 const bodyParser = require("body-parser");
 const cors = require('cors')
+const auth = require('./middleware/auth')
+
 const app = express()
 
 
 var allowedOrigins = ['http://localhost:8080',
-                      'https://lineapi.egat.co.th',
+                      'http://localhost:4000',
                       'https://a6d1-124-122-94-197.ngrok.io'
                     ]
+
 app.use(cors({
   origin: function(origin, callback){
     if(!origin) return callback(null, true);
@@ -23,6 +26,8 @@ app.use(cors({
     return callback(null, true);
   }
 }));
+
+//app.use(cors())
 
 app.set('view engine','ejs')
 
@@ -47,11 +52,14 @@ app.use(bodyParser.json())//<-- after line.middleware
 // ***************************************************
 
 //--RB --------------------------------------------
+const rb_info  = require('./handler/rb/getInfo');
+app.post('/rb_info', rb_info);
+
 const rb_getpdf  = require('./handler/rb/getpdf');
 app.get('/rb_getpdf', rb_getpdf);
 
 const rb_action  = require('./handler/rb/action');
-app.post('/rb_action', rb_action);
+app.post('/rb_action', auth, rb_action);
 
 // EJS template
 app.get('/rb_readpdf' , (req,res) => {

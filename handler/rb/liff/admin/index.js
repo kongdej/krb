@@ -228,6 +228,7 @@ const handleEvent = async (event) => {
 }
 
 const webhook = (req, res) => {
+  console.log('action webhook: ', req.user)
   return Promise
     .all(req.body.events.map(handleEvent))
     .catch((e) => {

@@ -9,7 +9,8 @@
     <page-footer></page-footer>
 
     <q-page-container>
-      <div class="q-pa-md q-mt-lg">
+      <div v-if="show">
+        <div class="q-pa-md q-mt-lg">
             <q-list bordered separator>
               <q-item-label  overline header>
                 <q-icon name="lab la-dashcube" /> Insight analytics
@@ -54,36 +55,63 @@
               <i class="lar la-bell"></i> Note: (last month/total)
             </div>
           </div>
+      </div>
+
+      <div v-else class="no-tasks absolute-center">
+
+        <div class="text-h5 text-grey-6 text-center">
+          <q-icon name="close" size="20px" color="negative"/>
+          not Authorized
+        </div>
+      </div>
     </q-page-container>
   </q-layout>
 </template>
 
 <script>
-import { ref , inject, onMounted } from 'vue'
+import { ref , inject, onMounted, provide, defineComponent, getCurrentInstance } from 'vue'
 import { api } from 'boot/axios'
 
-export default {
+export default defineComponent({
   name: 'Home',
   setup() {
+    const app = getCurrentInstance()
     const store = inject('store')
     let users = ref({})
     let search = ref({})
     let read = ref({})
     let documents = ref({})
+    let show = ref('fasle')
 
     onMounted(() => {
-      api.post('/rb_action',{
-          action: 'summery'
-        })
-        .then(function (response) {
-          users.value = response.data.results.users
-          search.value = response.data.results.search
-          read.value = response.data.results.read
-          documents.value = response.data.results.documents
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+      if (app.appContext.config.globalProperties.$token) {
+        show.value = true
+        let headers = {
+          'Content-Type': 'application/json',
+          'x-access-token': app.appContext.config.globalProperties.$token
+        }
+
+        console.log(headers)
+
+        api.post('/rb_action',{
+            action: 'summery'
+          },
+          {
+            headers
+          })
+          .then(function (response) {
+            users.value = response.data.results.users
+            search.value = response.data.results.search
+            read.value = response.data.results.read
+            documents.value = response.data.results.documents
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        }
+        else {
+          show.value = false
+        }
     })
 
     return {
@@ -91,8 +119,21 @@ export default {
       users,
       search,
       read,
-      documents
+      documents,
+      show
     }
   }
-}
+})
 </script>
+
+<style lang="scss">
+  .done {
+    .q-item__label {
+      text-decoration: line-through;
+      color: #bbb;
+    }
+  }
+  .no-tasks {
+    opacity: 0.8;
+  }
+</style>
