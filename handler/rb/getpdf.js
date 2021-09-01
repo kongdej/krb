@@ -18,13 +18,13 @@ const query = async(sql,key) => {
 }
 
 // logging
-const insertView = async(userId, id) => {
+const insertView = async(userId, filename) => {
   const data  = {
-    'userId' : userId,
-    'did': id
+    userId,
+    filename
   }
   console.log('Add Views ',data)
-  let sql = 'INSERT INTO rb_views SET ? '
+  let sql = 'INSERT INTO rb_read SET ? '
   const key = [data]
   const result = await query(sql, key)
 
@@ -49,8 +49,8 @@ const handleAction = async (req, res) => {
   result = await query(sql,key)
   console.log(sql,id,result)
   if (result.length > 0) {
-      insertView(userId, id)
       const {path, filename} = result[0]
+      insertView(userId, filename)
       let filePath =  process.env.RB_DOCPATH + path + "/"+ filename;
       console.log('filePath:',filePath)
       if (fs.existsSync(filePath)) {

@@ -6,6 +6,8 @@ import glob
 import time
 import re
 import mysql.connector
+import pdftotext
+
 from dotenv import dotenv_values
 config = dotenv_values("../.env")
 
@@ -83,6 +85,7 @@ if addDocuments or All:
                 myresult = conn.fetchall()
 
                 if len(myresult) == 0 :
+                    '''
                     #extract pdf to output.txt
                     #os.system('java -jar ' + homedir + '/pdfbox-app-2.0.23.jar export:text  -i "'+ name +'" -o '+homedir+'/output.txt')
                     os.system('java -jar ' + homedir + '/pdfbox-app-2.0.23.jar ExtractText "'+ name +'" -o '+ homedir+'/output.txt')
@@ -99,14 +102,24 @@ if addDocuments or All:
                     os.remove(homedir + '/output.txt')
 
                     cleaned_text = re.sub('[^A-Za-z0-9ก-๙\W]+', '', text)
-                    
+
                     print (cleaned_text)
-                    path = root.replace(documents,'')
-                    print ('==========================================')
-                    sql = "INSERT INTO rb (cat, filename, content, path) VALUES (%s, %s, %s, %s)"
-                    val = (cat, file, cleaned_text, path)
-                    conn.execute(sql, val)
-                    mydb.commit()
+                    '''
+                    content=''
+                    with open(name, "rb") as f:
+                        pdf = pdftotext.PDF(f)
+                        for page in pdf:
+                            content += page.replace('\n','').replace('\r','')
+                        #print (n, name)
+                        #print (content)
+                        #print ('--------------------------------------------')
+                        #n += 1
+                        path = root.replace(documents,'')
+                        print ('==========================================')
+                        sql = "INSERT INTO rb (cat, filename, content, path) VALUES (%s, %s, %s, %s)"
+                        val = (cat, file, content, path)
+                        conn.execute(sql, val)
+                        mydb.commit()
 
                 #print(conn.rowcount, "record inserted.")
 

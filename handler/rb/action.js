@@ -48,9 +48,9 @@ const updateDoc = async(data) => {
 const summery = async() => {
   let sql  = "select count(*) as total ,sum(updated >= DATE(NOW() - INTERVAL 1 MONTH)) as lastest from rb_users"
   let users = await query(sql)
-      sql  = "select count(*) as total ,sum(updated >= DATE(NOW() - INTERVAL 1 MONTH)) as lastest from rb_logs"
+      sql  = "select count(*) as total ,sum(updated >= DATE(NOW() - INTERVAL 1 MONTH)) as lastest from rb_search"
   let search = await query(sql)
-      sql  = "select count(*) as total ,sum(modified > DATE(NOW() - INTERVAL 1 MONTH)) as lastest from rb_views"
+      sql  = "select count(*) as total ,sum(modified > DATE(NOW() - INTERVAL 1 MONTH)) as lastest from rb_read"
   let read = await query(sql)
       sql  = "select count(*) as total, max(modified) as lastest from rb"
   let documents = await query(sql)
@@ -64,10 +64,12 @@ const summery = async() => {
 }
 
 const trend = async() => {
-  let sql  = "select keysearch, count(*) as total from rb_logs group by keysearch order by total desc limit 0,5"
+  let sql  = "select keysearch, count(*) as total from rb_search group by keysearch order by total desc limit 0,5"
   let search = await query(sql)
-      sql  = "SELECT d.filename as docname , count(*) as total FROM rb_views v LEFT JOIN rb d ON v.did = d.id"
-      sql += " WHERE d.id is not null GROUP BY d.filename ORDER BY total DESC LIMIT 0,5"
+      //sql  = "SELECT d.filename as docname , count(*) as total FROM rb_read v LEFT JOIN rb d ON v.filename = d.id"
+      //sql += " WHERE d.id is not null GROUP BY d.filename ORDER BY total DESC LIMIT 0,5"
+      sql = "SELECT filename , count(*) as total FROM rb_read  where LENGTH(filename)  >= 4 GROUP BY  filename ORDER BY total DESC LIMIT 0,5"
+
   let read = await query(sql)
 
   return {
@@ -77,7 +79,7 @@ const trend = async() => {
 }
 
 const logging = async() => {
-  let sql  = "select * from rb_logs order by updated desc limit 0,100"
+  let sql  = "select * from rb_search order by updated desc limit 0,100"
   let logging = await query(sql)
 
   return {

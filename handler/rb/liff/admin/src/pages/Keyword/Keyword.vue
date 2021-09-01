@@ -53,7 +53,7 @@ export default {
         })
         .then(function (response) {
           searchResults.value = response.data.results
-          console.log(response.data);
+          //console.log(response.data);
           text.value = ''
         })
         .catch(function (error) {

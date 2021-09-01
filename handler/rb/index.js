@@ -131,20 +131,27 @@ const sendMessages = async(event,results, nbHits, key) => {
 }
 
 // logging
-const insertLog = async(event, keysearch, filters, nResult) => {
+const insertLog = async(event, keysearch, nResult) => {
+  if (keysearch == "@menu") return false
+
+  const userInfo =  await client.getProfile(event.source.userId)
   const data  = {
     'userId' : event.source.userId,
+    'displayName': userInfo.displayName,
+    'pictureUrl' : userInfo.pictureUrl,
     'keysearch': keysearch,
-    'category' : filters,
     'result' : nResult
   }
   console.log('Add Logging',data)
-  let sql = 'INSERT INTO rb_logs SET ? '
+
+  let sql = 'INSERT INTO rb_search SET ? '
   const key = [data]
   const result = await query(sql, key)
 
   return result
+
 }
+
 
 // Main Search
 const find = async(event, keysearch, filters) => {
@@ -159,7 +166,7 @@ const find = async(event, keysearch, filters) => {
   const result = await query(sql,key)
 
   result.map(row => {
-    console.log(row.filename)
+    //console.log(row.filename)
     let title = row.filename.replace('.pdf','').replace('.PDF','')
     results.push({
       "type": "text",
@@ -180,8 +187,8 @@ const find = async(event, keysearch, filters) => {
     })
   })
 
-  console.log(results.length)
-  //insertLog(event, key, filters, results.length)
+  //console.log(results.length)
+  insertLog(event, keysearch, results.length)
   let show = results.slice(0,50)
   sendMessages(event, show, results.length , keysearch)
 }
@@ -206,6 +213,14 @@ const handleEvent = async (event) => {
   }
   if (event.message.text.includes("รอสักครู่..")) {
     return Promise.resolve(null);
+  }
+
+  if (event.message.text.includes("@menu")) {
+    return client.replyMessage(event.replyToken,{
+            "type": "flex",
+            "altText": "คุณระเบียบ - menu",
+            "contents": linemsg.menu
+          })
   }
 
   let sql = ` SELECT * FROM rb_users WHERE userId = ? `

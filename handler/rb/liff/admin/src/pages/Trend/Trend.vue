@@ -26,8 +26,8 @@
             <q-icon name="lab la-dashcube" /> Top Read
           </q-item-label>
           <q-item clickable v-ripple v-for="item,index in read" :key="index">
-            <q-item-section>{{ index+1 }}. {{ item.docname }}</q-item-section>
-            <q-item-section side>{{ item.total }}</q-item-section>
+            <q-item-section top>{{ index+1 }}. {{ item.filename }}</q-item-section>
+            <q-item-section top side>{{ item.total }}</q-item-section>
           </q-item>
         </q-list>
 

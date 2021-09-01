@@ -143,7 +143,7 @@ export default {
           keyword: keyword.value
         })
         .then(function (response) {
-          console.log(response.data);
+          //console.log(response.data);
           $q.notify({
             message: 'Update keyword done.',
             color: 'purple'

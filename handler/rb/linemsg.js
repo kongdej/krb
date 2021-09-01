@@ -1,4 +1,4 @@
-require('dotenv').config({path:'./.env'})
+require('dotenv').config({path:'/home/siteline/.env'})
 
 const register = {
   "type": "bubble",
@@ -56,7 +56,34 @@ const register = {
   }
 }
 
+const menu = {
+  "type": "bubble",
+  "size": "mega",
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "spacing": "sm",
+    "contents": [
+      {
+        "type": "button",
+        "style": "primary",
+        "height": "md",
+        "action": {
+          "type": "uri",
+          "label": "Admin Menu",
+          "uri": "https://liff.line.me/"+process.env.RB_LIFF_ADMIN
+        }
+      },
+      {
+        "type": "spacer",
+        "size": "sm"
+      }
+    ],
+    "flex": 0
+  }
+}
 
 module.exports = {
-  register
+  register,
+  menu
 }
